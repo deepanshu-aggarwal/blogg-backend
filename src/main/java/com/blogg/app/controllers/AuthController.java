@@ -1,12 +1,16 @@
 package com.blogg.app.controllers;
 
+import com.blogg.app.dto.auth.request.LoginUser;
 import com.blogg.app.dto.auth.request.RegisterUser;
+import com.blogg.app.dto.auth.response.LoginResponse;
 import com.blogg.app.exceptions.EmailAlreadyExistsException;
 import com.blogg.app.exceptions.UserNotCreatedException;
+import com.blogg.app.exceptions.UserNotExistsException;
 import com.blogg.app.exceptions.UsernameAlreadyTakenException;
 import com.blogg.app.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +28,10 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUser request) throws UserNotCreatedException, UsernameAlreadyTakenException, EmailAlreadyExistsException {
         authService.registerUser(request);
         return ResponseEntity.ok("Successfully created new user " + request.getUsername());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginUser request) throws UserNotExistsException {
+        return new ResponseEntity<>(authService.loginUser(request), HttpStatus.OK);
     }
 }
