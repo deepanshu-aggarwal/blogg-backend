@@ -25,7 +25,7 @@ public class ArticleService {
 
     public ArticleResponse getArticleById(int id) throws ArticleNotFoundException {
         Article article = articleRepository.findById(id).orElse(null);
-        if (article == null) {
+        if (article == null || article.isDeleted()) {
             throw new ArticleNotFoundException("Article with id " + id + " not found.");
         }
 
